@@ -1,0 +1,218 @@
+# Aula 03
+
+## Real Use Case - Modelo de Equações Estruturais
+
+Vamos investigar os dados da PNAD 2014 a partir de um modelo de equações estruturais. Esta análise está baseada no método descrito [desta referência](https://repositorio.enap.gov.br/bitstream/1/3334/1/Livro_Modelo%20de%20equações%20estruturais.pdf) (NEVES, 2018) e na análise realizada [nesta referência](https://www.scielo.br/scielo.php?pid=S0011-52582020000300203&script=sci_arttext) (SALATA, 2020). Para isso, será necessário fazer a extração dos dados do seu repositório, tratamento e análises.
+
+```{r setup}
+library(dplyr)
+library(readr)
+library(ggplot2)
+library(questionr)
+library(lavaan)
+library(lavaanPlot)
+```
+
+## Extração da PNAD 2014
+
+Primeiro extraímos os arquivos do servidor FTP do IBGE e descompactamos. Dependendo da conexão, pode demorar um pouquinho para fazer o download!
+
+```{r}
+url_dados = "ftp://ftp.ibge.gov.br/Trabalho_e_Rendimento/Pesquisa_Nacional_por_Amostra_de_Domicilios_anual/microdados/2014/Dados_20170323.zip"
+
+url_dicionario = "ftp://ftp.ibge.gov.br/Trabalho_e_Rendimento/Pesquisa_Nacional_por_Amostra_de_Domicilios_anual/microdados/2014/Dicionarios_e_input_20170323.zip"
+
+data_path = './data/pnad2014'
+dir.create(data_path, recursive = T)
+
+download.file(url_dicionario, 
+              paste0(data_path, "/Dicionarios_e_input_20170323.zip"))
+
+download.file(url_dados, 
+              paste0(data_path, "/Dados_20170323.zip"))
+
+```
+
+Caso a extração via comando `download.file` não funcione, podemos fazer o download manual (não recomendável no nosso caso) ou utilizar o terminal e implementar o comando curl.
+
+``` {.bash}
+cd data/pnad2014
+
+curl ftp://ftp.ibge.gov.br/Trabalho_e_Rendimento/Pesquisa_Nacional_por_Amostra_de_Domicilios_anual/microdados/2014/Dados_20170323.zip -o Dados_20170323.zip
+```
+
+```{r}
+unzip(paste0(data_path, "/Dados_20170323.zip"), exdir = data_path)
+unzip(paste0(data_path, "/Dicionarios_e_input_20170323.zip"), exdir = data_path)
+```
+
+```{r}
+# A extração em sistemas UNIX fica com um probleminha de encoding
+list.files(paste0(data_path))
+
+# lista o que está dentro da pasta do dicionário
+list.files(paste0(data_path, "/Dicion\xa0rios e input"))
+
+file.copy(paste0(data_path, "/Dicion\xa0rios e input/Dicion\xa0rio de vari\xa0veis de pessoas - PNAD 2014.xls"), 
+          paste0(data_path, "/dicionario_pessoas_pnad2014.xls"))
+```
+
+Agora, vamos importar a PNAD utilizando a informação no dicionário de variáveis para fazer o R entender o formato fixo
+
+```{r}
+library(readxl)
+dicionario = read_xls(paste0(data_path, "/dicionario_pessoas_pnad2014.xls"), 
+                      skip = 1) %>% filter(!is.na(Tamanho))
+dicionario$`Posição Inicial` = as.integer(dicionario$`Posição Inicial`)
+dicionario
+```
+
+```{r, warning=F, message=F}
+posicoes = fwf_positions(
+  start = dicionario$`Posição Inicial`,
+  end = dicionario$`Posição Inicial` + dicionario$Tamanho - 1,
+  col_names = dicionario$`Código de variável`
+)
+pnad = read_fwf(paste0(data_path, "/Dados/PES2014.txt"), posicoes)
+```
+
+```{r}
+head(pnad)
+```
+
+Agora, vamos escolher algumas variáveis para o modelo e tratá-las. Vamos trabalhar com
+
+-   Renda do trabalho principal (V9532)
+-   Ocupação (ISEI) - a construir a partir de V9906
+-   Anos de escolaridade completos (V4803)
+-   Preto (binária pretos=1, brancos=0) - a construir a partir de V0404
+-   Ocupação do pai (V32019)
+-   Escolaridade do pai (V32012)
+-   Idade (V8005)
+-   $Idade^2$
+-   Mulher (binária a partir de V0302)
+-   Migração (V0501)
+
+**Filtro a ser aplicado para as análises**: pessoas de 20 a 64 anos, trabalhando (V9001 = 1) e com renda.
+
+```{r}
+amostra1 = pnad %>% 
+  dplyr::select(V9532, V9906, V4803, V0404, 
+         V32019, V32012, V8005, V0302, V0501, V9001) %>% 
+  # Trata os filtros
+  mutate(idade = as.integer(V8005), renda = as.integer(V9532)) %>% 
+  # Filtra
+  filter(idade >= 20, idade <= 64, 
+         V9001 == 1, 
+         renda > 0, renda < 999999999998) %>% 
+  mutate(lnrenda = log(renda)) %>% 
+  # Trata as outras variáveis
+  mutate(anosesco = as.integer(V4803) - 1L) %>% 
+  mutate(anosesco = case_when(
+    anosesco == 17 ~ NA_integer_,
+    TRUE ~ anosesco
+  )) %>% 
+  mutate(preto = case_when(
+    V0404 == 2 | V0404 == 6 ~ 0L,
+    V0404 == 4 | V0404 == 8 | V0404 == 0 ~ 1L
+  )) %>% 
+  mutate(escopai =  as.integer(V32012) - 1L) %>% 
+  mutate(escopai = case_when(
+    escopai == 10 | escopai == 11 ~ NA_integer_,
+    TRUE ~ escopai
+  )) %>%
+  mutate(idade2 = idade^2) %>% 
+  mutate(mulher = case_when(
+    V0302 == 2 ~ 0L,
+    V0302 == 4 ~ 1L
+  )) %>% 
+  mutate(migracao = case_when(
+    V0501 == 1 ~ 0L,
+    V0501 == 3 ~ 1L
+  )) %>% 
+  # Apenas casos onde conhecemos a escolaridade do pai
+  filter(!is.na(escopai))
+```
+
+Agora, vamos construir as variáveis de ocupação do pai e do indivíduo a partir da tabela de conversão CBO - ISCO
+
+```{r, warning=F, message=F}
+tabconv = read_csv('data/tabela_conversao_cbo_isco.csv')
+tabconv
+```
+
+```{r}
+amostra = amostra1 %>% 
+  mutate(V9906 = as.integer(V9906), V32019 = as.integer(V32019)) %>% 
+  inner_join(tabconv %>% dplyr::select(iscocode, cbo2002), 
+            by = c("V9906" = "cbo2002")) %>% 
+  mutate(isco = iscocode) %>% dplyr::select(-iscocode) %>% 
+  inner_join(tabconv %>% dplyr::select(iscocode, cbo2002), 
+            by = c("V32019" = "cbo2002")) %>% 
+  mutate(iscopai = iscocode) %>% dplyr::select(-iscocode)
+```
+
+```{r, warning=F, message=F}
+amostra = recode_from_ISCO88_to_ISEI(amostra$isco, amostra)
+amostra = amostra %>% 
+  mutate(isei = ISEI) %>% dplyr::select(-ISEI)
+amostra = recode_from_ISCO88_to_ISEI(amostra$iscopai, amostra)
+amostra = amostra %>% 
+  mutate(iseipai = ISEI) %>% dplyr::select(-ISEI)
+```
+
+```{r}
+amostra
+```
+
+Vamos verificar a correlação entre o status sócio ocupacional do indivíduo e do pai:
+
+```{r, warning=F, message=F}
+ggplot(amostra, aes(x=iseipai, y=isei)) + geom_point(alpha=.5) +
+  stat_smooth(method='lm', color='red')
+```
+
+```{r, warning=F, message=F}
+amostra1 %>% 
+  group_by(idade) %>% 
+  summarise(medrenda = mean(renda)) %>% 
+  ggplot(aes(idade, medrenda)) +
+  geom_point() +
+  stat_smooth(method='lm', formula = 'y~poly(x, 2)')
+```
+
+# Modelo de Equações Estruturais
+
+Agora sim, vamos para a modelagem:
+
+```{r}
+model = '
+  # latent variables
+    socialorigin =~ iseipai + escopai
+  
+  # regressions
+    anosesco ~ socialorigin + preto + migracao
+    isei ~ anosesco + socialorigin + preto + mulher + migracao
+    lnrenda ~ anosesco + socialorigin + isei + preto + mulher + idade + idade2
+  
+  # residual covariances
+    isei ~~ iseipai
+    anosesco ~~ escopai
+'
+
+mee = sem(model, data=amostra)
+summary(mee, standardized=T, rsquare=T)
+```
+
+```{r}
+lavaanPlot(model = mee, 
+           node_options = list(shape = "box", fontname = "Helvetica"), 
+           edge_options = list(color = "grey"), 
+           coefs = T, covs=T, stars=T, stand=T)
+```
+
+# Bibliografia utilizada
+
+NEVES, Jorge Alexandre Barbosa (2018). **Modelo de equações estruturais**: uma introdução aplicada. Brasília: Enap. Disponível em [https://repositorio.enap.gov.br/bitstream/1/3334/1/Livro_Modelo%20de%20equações%20estruturais.pdf](https://repositorio.enap.gov.br/bitstream/1/3334/1/Livro_Modelo%20de%20equações%20estruturais.pdf)
+
+SALATA, André. Race, Class and Income Inequality in Brazil: A Social Trajectory Analysis. **Dados**, Rio de Janeiro , v. 63, n. 3, 2020. Disponível em <http://www.scielo.br/scielo.php?script=sci_arttext&pid=S0011-52582020000300203&lng=en&nrm=iso>
