@@ -1,0 +1,296 @@
+# Aula 02
+
+## Funções
+
+Podemos entender uma função como um conjunto de instruções (expressão) R que será executada quando a função for chamada. Funções são extremamente úteis em programação pois reduzem o nível de duplicação do seu código, deixa-o mais rigoroso e mais eficiente.
+
+As funções tipicamente possuem três componentes: **argumentos**, **corpo** e **ambiente** (*arguments, body and environment*).
+
+Existe uma exceção, a saber, as funções "primitivas", funções base que são implementadas puramente em C.
+
+Funções são objetos como qualquer outro em R.
+
+Verifiquemos uma função que utilizamos com frequência, a função `freq` do pacote `questionr`. Para verificar o código de uma função, digite o nome sem parênteses:
+
+```{r}
+library(questionr)
+
+freq
+```
+
+Trata-se de uma função mais complexa. Para investigar as partes dessa função mais a fundo, utilizamos os seguintes comandos:
+
+```{r}
+# formals() para verificar os argumentos
+formals(freq)
+```
+
+```{r}
+# body mostra o corpo da função
+body(freq)
+```
+
+```{r}
+# environment mostra o ambiente
+environment(freq)
+```
+
+## Funções primitivas
+
+Funções primitivas são escritas diretamente em C. Veja a função `sum`, por exemplo:
+
+```{r}
+sum
+```
+
+Funções primitivas tem argumentos, corpo e ambiente nulos
+
+```{r}
+formals(sum)
+body(sum)
+environment(sum)
+```
+
+## Escopo
+
+As variáveis definidas dentro de uma função tem o seu escopo contido dentro da função. Elas existem apenas no momento de execução e, ao fim, são destruídas.
+
+```{r}
+f = function(x) {
+  res = x + 2
+  return(res)
+}
+
+f(1)
+
+print(res)
+```
+
+Da mesma maneira, variáveis globais (definidas fora do escopo da função) não são afetadas pelo conteúdo da função.
+
+Qual é a saída da expressão abaixo?
+
+```{r}
+x = 10
+
+f = function(x) {
+  x + 10
+}
+
+f(1)
+```
+
+# Automatizando processos com `functions` e `functionals`
+
+Podemos associar a construção de funções com os métodos funcionais da família apply para fazer operações complexas de maneira automatizada. Retomemos o exemplo de transformação de variáveis do enade da aula passada.
+
+```{r, warning=F, message=F}
+library(readr)
+
+url = "https://github.com/neylsoncrepalde/introducao_ao_r/blob/master/dados/enade_2014_amostra.csv?raw=true"
+enade = read_csv2(url)
+```
+
+Ao invés de
+
+``` {.r}
+for (i in 101:142){
+  enade[[i]] = recode(enade[[i]], "c(7,8)=NA")
+}
+```
+
+podemos fazer
+
+```{r}
+library(car)
+
+corrige_qe = function(x) {
+  recode(x, "c(7,8)=NA")
+} 
+
+enade[101:142] = sapply(enade[101:142], corrige_qe)
+```
+
+```{r}
+# Conferindo
+freq(enade[[101]])
+```
+
+O código acima poderia ter sido definido no formato de uma "função anônima", ou seja, definido dentro do próprio `sapply`
+
+``` {.r}
+enade[101:142] = sapply(enade[101:142], function(x) recode(x, "c(7,8)=NA"))
+```
+
+Entretanto, além de mais confusa, essa sintaxe é menos performática do que a primeira visto que a função será redefinida em todas as execuções.\
+
+# Benchmarkings - Comparações de desempenho
+
+Vamos utilizar o pacote `microbenchmark` para realizar algumas comparações de desempenho no R de `for` loops e `functionals`:
+
+```{r}
+library(microbenchmark)
+
+numericos = enade %>% select_if(is.numeric)
+size = ncol(numericos)
+
+calculo = function(x) sqrt(mean(x))
+
+```
+
+```{r}
+microbenchmark(
+  forloop = {
+    res = vector('numeric', size)
+    for (i in 1:size) {
+      res[i] = sqrt(mean(numericos[[i]]))
+    }
+  },
+  functional = {
+    res = sapply(numericos, calculo)
+  },
+  times = 10
+)
+```
+
+# Exemplos práticos
+
+## Análise do Enade 2014
+
+Vamos realizar uma análise nos dados do Enade 2014. Alguns tratamentos nos dados precisam ser feitos. Primeiro, vamos ler os dados novamente para ter o dataset "cru".
+
+```{r}
+url = "https://github.com/neylsoncrepalde/introducao_ao_r/blob/master/dados/enade_2014_amostra.csv?raw=true"
+enade = read_csv2(url)
+head(enade)
+```
+
+1.  Limpar as variáveis de questionário do estudante
+
+```{r}
+names(enade)
+```
+
+```{r}
+corrige_seteoito = function(x) {
+  recode(x, "c(7,8)=NA")
+}
+
+enade[101:142] = sapply(enade[101:142], corrige_seteoito)
+```
+
+corrige os casos em que sexo está com a categoria "N" para `NA`.
+
+```{r}
+enade$tp_sexo[enade$tp_sexo == "N"] = NA
+```
+
+Colocando labels em algumas variáveis de interesse:
+
+```{r}
+enade = enade %>% 
+  mutate(
+    estcivil = case_when(
+      qe_i1 == 'a' ~ "Solteiro",
+      qe_i1 == 'b' ~ "Casado",
+      qe_i1 == 'c' ~ "Separado",
+      qe_i1 == 'd' ~ "Viúvo",
+      qe_i1 == 'e' ~ "Outro"
+    ),
+    cor = case_when(
+      qe_i2 == 'a' ~ 'Branco',
+      qe_i2 == 'b' ~ 'Negro',
+      qe_i2 == 'c' ~ 'Pardo',
+      qe_i2 == 'd' ~ 'Amarelo',
+      qe_i2 == 'e' ~ 'Indígena',
+    ),
+    escopai = case_when(
+      qe_i4 == 'a' ~ 0,
+      qe_i4 == 'b' ~ 1,
+      qe_i4 == 'c' ~ 2,
+      qe_i4 == 'd' ~ 3,
+      qe_i4 == 'e' ~ 4,
+      qe_i4 == 'f' ~ 5
+    ),
+    escomae = case_when(
+      qe_i5 == 'a' ~ 0,
+      qe_i5 == 'b' ~ 1,
+      qe_i5 == 'c' ~ 2,
+      qe_i5 == 'd' ~ 3,
+      qe_i5 == 'e' ~ 4,
+      qe_i5 == 'f' ~ 5
+    ),
+    renda = case_when(
+      qe_i8 == 'a' ~ 0,
+      qe_i8 == 'b' ~ 1,
+      qe_i8 == 'c' ~ 2,
+      qe_i8 == 'd' ~ 3,
+      qe_i8 == 'e' ~ 4,
+      qe_i8 == 'f' ~ 5,
+      qe_i8 == 'g' ~ 6
+    )
+  )
+```
+
+```{r}
+enade %>% select(estcivil:renda)
+```
+
+# Regressão
+
+Vamos montar um modelo de regressão que explique o desempenho dos estudantes pelas covariáveis demográficas. Vamos verificar a distribuição de algumas das variáveis:
+
+```{r, warning=F, message=F}
+library(ggplot2)
+library(GGally)
+
+# Numéricas
+ggpairs(enade %>% select(nt_ger, nu_idade, escopai, escomae, renda))
+```
+
+```{r}
+ggplot(enade, aes(x=cor, y=nt_ger)) +
+  geom_boxplot()
+```
+
+```{r}
+ggplot(enade, aes(x=estcivil, y=nt_ger)) +
+  geom_boxplot()
+```
+
+```{r}
+modelo = lm(nt_ger ~ nu_idade + escopai + escomae + renda + estcivil + cor,
+            data=enade)
+
+summary(modelo)
+```
+
+## Modelo Hierárquico
+
+Para teste, vamos estimar um modelo hierárquico com as mesmas covariáveis do modelo anterior mas, agora, implementando um intercepto aleatório em dois níveis, IES (nível 2) e UF (nível 3).
+
+```{r}
+library(lme4)
+library(merTools)
+library(lmtest)
+
+modeloh = lmer(nt_ger ~ (1 | co_uf_curso/co_ies) + nu_idade + 
+                 escopai + escomae + renda + estcivil + cor,
+            data=enade,
+            REML = F)
+summary(modeloh)
+```
+
+```{r}
+lrtest(modelo, modeloh)
+```
+
+```{r}
+library(MuMIn)
+r.squaredGLMM(modelo)
+r.squaredGLMM(modeloh)
+
+AIC(modelo, modeloh)
+```
+
+Nossos modelos não estão nada bacanas. Há algumas hipótese que podemos melhorar para obter modelos mais interessantes e com melhor poder explicativo. Alé disso, é importante lembrar que estamos trabalhando com uma amostra pequena de 10 mil casos. O banco de dados original possui cerca de 500 mil. Vejam uma implementação [aqui](http://www.sbsociologia.com.br/rbsociologia/index.php/rbs/article/view/186).

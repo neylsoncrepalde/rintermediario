@@ -1,0 +1,216 @@
+# Aula 01
+
+## Loops e Estruturas de Controle
+
+Loops são funções de iteração que nos permitem realizar tarefas repetidas de forma automatizada. Os loops estão presentes em qualquer linguagem de programação.
+
+As três principais funções de loop são `for`, `while` e `repeat`.
+
+### Loop For
+
+A estrutura do loop for é esta:
+
+``` {.r}
+for (contador in conjunto_de_dados) {
+  instrucao1
+  instrucao2
+  instrucao3
+}
+```
+
+Vamos começar. Podemos ler o comando abaixo da seguinte forma: para cada número no conjunto de números de um a 10, "imprima" o número.
+
+```{r}
+for (i in 1:10) {
+  print(i)
+}
+```
+
+No comando acima, o "contador" e a expressao i e o "conjunto de valores" e o vetor numerico c(1,2,3,4,5,6,7,8,9,10). O numero de elementos do conjunto de valores determina quantas vezes as tarefas serao repetidas Nesse caso, esse vetor tem 10 elementos. Entao, o loop sera executado 10 vezes.
+
+Na primeira iteracao, i assume o valor do primeiro elemento do conjunto. No caso, "1". E entao executamos uma funcao: print(i). Com isso, o valor de i sera apresentado na tela. Na segunda iteracao, i assume o valor do segundo elemento; no caso, 2... e assim por diante.
+
+Podemos fazer o mesmo modificando a saída para `i^2`.
+
+```{r}
+for (numero in 1:10) {
+  print(numero^2)
+}
+```
+
+podemos executar várias coisas dentro de um loop. Vamos pedir uma média para todas as variáveis numéricas do banco **iris**.
+
+```{r}
+data(iris)
+
+for (var in 1:4) {
+  print(
+    mean(iris[[var]])
+  )
+}
+```
+
+Podemos ainda fazer loops dentro de loops. Vamos preencher, com uma estrutura de loops aninhados, uma matriz. Primeiro criamos uma matriz com 10 colunas e 20 linhas. Todas as entradas sao zero:
+
+```{r}
+A = matrix(0,ncol=10,nrow=20)
+A
+```
+
+Agora vamos substituir os valores de cada celula usando loops:
+
+```{r}
+for(i in 1:nrow(A)){
+    for(j in 1:ncol(A)){
+        A[i,j] = i*j
+    } 
+}
+A
+```
+
+### **Usando condicionais**
+
+O uso de condicionais é essencial em computação. Condicionais indicam que uma ação só será realizada se uma determinada condição for cumprida.
+
+```{r}
+x = 10
+y = 15
+if(x == 10){x = x^2} 
+
+if(y == 20){y = y^2}
+x
+```
+
+```{r}
+y
+```
+
+Podemos ler os comandos acima da seguinte maneira: uma vez que atribuímos o valor 10 ao x e 15 ao y, colocamos o condicional se x for igual a 10, x deverá receber um novo valor, x ao quadrado. Se y for igual a 20, y deverá receber um novo valor, y ao quadrado. Como apenas a primeira condicional é satisfeita, apenas o valor de x é modificado.
+
+Podemos usar uma estrutura de loop for com condicional para classificar, por exemplo, adultos num banco de dados.
+
+```{r, warnings=F, message=F}
+library(dplyr)
+banco = tibble(
+  sexo=c("feminino","masculino","feminino","masculino","masculino",
+         "feminino","masculino","feminino","masculino","feminino",
+         "feminino","masculino"),
+  idade=c(20,21,19,19,22,23,18,25,19,21,22,26))
+
+banco$adulto = NA
+for (i in 1:nrow(banco)){
+  if (banco$idade[i] >= 21){
+    banco$adulto[i] = "Adulto"
+  }
+  else {
+    banco$adulto[i] = "Jovem"
+  }
+}
+banco
+```
+
+Aqui, criamos uma nova variável **adulto** e a recodificamos segundo criterio de idade ser maior ou igual a 21 anos.
+
+Outro exemplo de recodificação com o banco de dados do Enade (que trabalhamos na aula 2). Sabemos, consultando o questionário do aluno, que as variáveis 101 até 142 (organização didático-pedagógica) tem as opções 7 e 8 codificadas respectivamente como "não sei responder" e "não se aplica". Precisamos recodificá-las como NA's para que nossa análise fique correta. Para fazer isso de modo bem fácil, podemos utilizar a função `recode` do pacote `car`. Podemos fazer:
+
+```{r, warning=F, message=F}
+library(readr)
+
+url = "https://github.com/neylsoncrepalde/introducao_ao_r/blob/master/dados/enade_2014_amostra.csv?raw=true"
+enade = read_csv2(url)
+
+library(questionr)
+
+freq(enade[[101]])
+```
+
+```{r}
+class(enade[[101]])
+```
+
+```{r}
+library(car)
+
+for (i in 101:142){
+  enade[[i]] = recode(enade[[i]], "c(7,8)=NA")
+}
+```
+
+```{r}
+freq(enade[[101]])
+```
+
+### **Loop While**
+
+O loop while é executado até que uma condição seja satisfeita.
+
+```{r}
+x <- 10
+numero_da_iteracao <- 0
+
+while(x > -2){
+      print(paste("Esta é a iteração", numero_da_iteracao))
+        x <- rnorm(1) # Gera um número aleatório com dist. normal
+        numero_da_iteracao = numero_da_iteracao + 1
+}
+```
+
+### **Loop Repeat**
+
+O loop repeat é executado infinitamente. É bom que coloquemos uma condição para que ele pare usando o comando `break`.
+
+```{r}
+i=0
+repeat{
+    print(i)
+    i=i+1
+        if(i > 10) {
+        break
+    }
+}
+```
+
+# Programação Funcional
+
+## A Família APPLY
+
+O R possui uma família de funções chamada `apply()` para realizar loops de forma intuitiva e com muita eficiência computacional.
+
+A família possui a função genérica `apply()` e suas variações `sapply()`, `lapply()`, `tapply()`, `mapply()`, dentre outras.
+
+Podemos executar um comando para várias variáveis de uma só vez, por exemplo, tirar a média. Lapply recebe uma lista como argumento e retorna uma nova lista.
+
+```{r}
+x = list(Componente1=1:50, Componente2=seq(2,10,by=.2))
+x
+```
+
+```{r}
+lapply(x, mean)
+```
+
+`sapply()` retorna os valores simplificados para a versão mais simples possível do vetor.
+
+```{r}
+sapply(iris[1:4], mean)
+```
+
+`tapply` executa uma função por grupos. Vamos fazer o cálculo da média de `Petal.Width` por espécie de flor.
+
+1.  Sem tapply
+
+```{r}
+mean(iris$Petal.Width[iris$Species=="setosa"])
+mean(iris$Petal.Width[iris$Species=="versicolor"])
+mean(iris$Petal.Width[iris$Species=="virginica"])
+```
+
+2.  Com tapply
+
+```{r}
+tapply(iris$Petal.Width, iris$Species, mean)
+```
+
+Em tese, qualquer `for` loop pode ser reprogramado num estilo funcional usando a família de funções apply. No R, o estilo funcional geralmente possui melhor desempenho do que trabalhar com loops e, portanto, deve ser privilegiado quando possível.
+
+Para utilizar programação funcional com maior liberdade e melhor performance, é necessário programar as rotinas que serão executadas em funções.
