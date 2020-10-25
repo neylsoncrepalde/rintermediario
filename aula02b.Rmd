@@ -1,0 +1,36 @@
+# Aula 02b
+
+## Real Use Case - Modelo de Equações Estruturais
+
+Vamos investigar os dados da PNAD 2014 a partir de um modelo de equações estruturais. Esta análise está baseada nas análises [desta referência](https://repositorio.enap.gov.br/bitstream/1/3334/1/Livro_Modelo%20de%20equações%20estruturais.pdf) (NEVES, 2018). Para isso, será necessário fazer a extração dos dados do seu repositório, tratamento e análises.
+
+```{r setup}
+library(dplyr)
+library(readr)
+library(ggplot2)
+library(lavaan)
+```
+
+## Extração da PNAD 2014
+
+Primeiro extraímos os arquivos do servidor FTP do IBGE e descompactamos. Dependendo da conexão, pode demorar um pouquinho para fazer o download!
+
+```{r}
+url_dados = "ftp://ftp.ibge.gov.br/Trabalho_e_Rendimento/Pesquisa_Nacional_por_Amostra_de_Domicilios_anual/microdados/2014/Dados_20170323.zip"
+
+url_dicionario = "ftp://ftp.ibge.gov.br/Trabalho_e_Rendimento/Pesquisa_Nacional_por_Amostra_de_Domicilios_anual/microdados/2014/Dicionarios_e_input_20170323.zip"
+
+data_path = './data/pnad2014'
+dir.create(data_path, recursive = T)
+
+download.file(url_dados, paste0(data_path, "Dados_20170323.zip"))
+download.file(url_dicionario, paste0(data_path, "Dicionarios_e_input_20170323.zip"))
+```
+
+```{r}
+
+```
+
+# Bibliografia utilizada
+
+NEVES, Jorge Alexandre Barbosa (2018). **Modelo de equações estruturais**: uma introdução aplicada. Brasília: Enap. Disponível em \<[https://repositorio.enap.gov.br/bitstream/1/3334/1/Livro_Modelo%20de%20equações%20estruturais.pdf](https://repositorio.enap.gov.br/bitstream/1/3334/1/Livro_Modelo%20de%20equações%20estruturais.pdf)\>
