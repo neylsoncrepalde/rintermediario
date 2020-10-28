@@ -61,6 +61,7 @@ Agora, vamos importar a PNAD utilizando a informação no dicionário de variáv
 
 ```{r}
 library(readxl)
+data_path = './data/pnad2014'
 dicionario = read_xls(paste0(data_path, "/dicionario_pessoas_pnad2014.xls"), 
                       skip = 1) %>% filter(!is.na(Tamanho))
 dicionario$`Posição Inicial` = as.integer(dicionario$`Posição Inicial`)
@@ -153,6 +154,7 @@ amostra = amostra1 %>%
 ```
 
 ```{r, warning=F, message=F}
+library(SocialPosition)
 amostra = recode_from_ISCO88_to_ISEI(amostra$isco, amostra)
 amostra = amostra %>% 
   mutate(isei = ISEI) %>% dplyr::select(-ISEI)
