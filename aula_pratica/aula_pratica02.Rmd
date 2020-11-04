@@ -1,0 +1,129 @@
+# Aula 02 - Funções
+
+```{r}
+mean(iris$Sepal.Length)
+sd(iris$Sepal.Length)
+summary(iris$Sepal.Length)
+```
+
+```{r}
+library(questionr)
+freq
+```
+
+## Partes da função
+
+3 partes:
+
+1.  Argumentos (Arguments)
+2.  Corpo (Body)
+3.  Ambiente (Environment)
+
+```{r}
+soma = function(x, y) {
+  res = x + y
+  print(x)
+  return(res)
+}
+```
+
+```{r}
+a = soma(5, 7)
+```
+
+```{r}
+a
+```
+
+```{r}
+f = function(x) {
+  res = x^2
+  res = x
+  return(res)
+}
+```
+
+```{r}
+b = f(3)
+```
+
+```{r}
+b
+```
+
+```{r}
+formals(soma)
+body(soma)
+environment(soma)
+environment(freq)
+```
+
+# Funções primitivas
+
+```{r}
+sum
+```
+
+# Teste com funções
+
+Vamos escrever uma função que pega uma variável numérica, centraliza na média, e vamos plotar um histograma mostrando a distribuição da variável centralizada.
+
+```{r}
+library(dplyr)
+library(readr)
+library(questionr)
+library(ggplot2)
+url = "https://github.com/neylsoncrepalde/introducao_ao_r/blob/master/dados/enade_2014_amostra.csv?raw=true"
+
+enade = read_csv2(url)
+```
+
+```{r}
+summary(enade$nt_ger)
+```
+
+```{r}
+
+centralizada = enade$nt_ger - mean(enade$nt_ger, na.rm = T)
+
+ggplot() +
+  geom_histogram(aes(centralizada)) +
+  labs(title = "Histograma")
+```
+
+```{r}
+enade[["nt_ce"]]
+```
+
+```{r}
+meuplot = function(nome, 
+                   titulo = "Hist", centralizado = T) {
+  
+  if (centralizado) {
+    variavel = enade[[nome]] - mean(enade[[nome]], na.rm=T)
+  } else {
+    variavel = enade[[nome]]
+  }
+  
+  g = ggplot() +
+    geom_histogram( aes( variavel ) ) +
+    labs(title = titulo)
+  
+  ggsave(paste0(nome, ".png"))
+  
+  return(g)
+}
+```
+
+```{r}
+meuplot("nt_ger")
+```
+
+```{r}
+amostra = enade %>% 
+  select(nt_ger, nt_fg, nt_ce, nu_idade, qe_i27:qe_i60)
+
+nomes = names(amostra)
+
+lapply(nomes, meuplot)
+```
