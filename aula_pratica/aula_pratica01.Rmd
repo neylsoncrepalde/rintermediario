@@ -1,0 +1,358 @@
+# R Intermediário - Aula 1
+
+## Prof. Neylson Crepalde
+
+### MQuinho 2020
+
+Aula 01 - **Loops e Estruturas de Controle** - *Introdução*
+
+```{r}
+print(1)
+print(2)
+print(3)
+print(4)
+print(5)
+print(6)
+print(7)
+print(8)
+print(9)
+print(10)
+```
+
+**LOOP**, laço. FOR
+
+``` {.r}
+PARA (item in conjunto_de_dados) {
+  instrução1
+  instrução2
+  instrução3
+}
+```
+
+```{r}
+# Comentário
+# i = iterador
+# Processo iterativo em que
+# Rodada 1: i = 1
+# Rodada 2: i = 2
+# Rodada 16: i = 16
+for (i in 1:30) {
+  print(i)
+}
+```
+
+```{r}
+for (item in 1:10) {
+  res = sqrt(item + 3)
+  print(res)
+}
+```
+
+```{r}
+iris[[1]]
+```
+
+```{r}
+for (col in 1:4) {
+  print(
+    mean(iris[[col]])
+  )
+}
+```
+
+# Condicionais
+
+```{r}
+x = 10
+y = 15
+
+if (x == 10){
+  x = x^2
+}
+
+if (y == 20){
+  y = y^2
+}
+```
+
+```{r}
+y
+```
+
+# Combinando loops e condicionais
+
+Nós temos um sistema que faz classificação de categorias de faixa etária.
+
+1.  Abaixo de 18 anos = criança
+2.  Acima ou igual a 18 anos = adulto
+
+```{r}
+for (idade in 1:30) {
+  if (idade < 18) {
+    print("criança")
+  }
+  if (idade >= 18) {
+    print("adulto")
+  }
+}
+```
+
+Vamos iterar de 1 até 40:
+
+1.  Abaixo de 18 anos = criança
+2.  De 18 até 25 = jovem adulto
+3.  De 26 até 40 = adulto
+
+```{r}
+for (idade in 1:40) {
+  if (idade < 18) {
+    print('Criança')
+  }
+  if (idade >= 18 & idade <= 25) {
+    print("Jovem adulto")
+  }
+  if (idade > 25) {
+    print("Adulto")
+  }
+}
+```
+
+Outra forma de resolver o problema de sobreposição de categorias - usando **if** e **else**
+
+```{r}
+for (idade in 1:40) {
+  if (idade < 18) {
+    print('Criança')
+  }
+  else {
+    print("adulto")
+  }
+}
+```
+
+```{r}
+for (idade in 1:40) {
+  if (idade < 18) {
+    print('Criança')
+  }
+  else if (idade <= 25) {
+    print("Jovem adulto")
+  }
+  else {
+    print("Adulto")
+  }
+}
+```
+
+# Brincando com dados do Enade 2014
+
+```{r}
+install.packages("readr")
+install.packages("dplyr")
+install.packages("questionr")
+```
+
+```{r}
+library(readr)
+library(dplyr)
+library(questionr)
+```
+
+```{r}
+# Leitura dos dados do Enade 2014
+url = "https://github.com/neylsoncrepalde/introducao_ao_r/blob/master/dados/enade_2014_amostra.csv?raw=true"
+
+enade = read_csv2(url)
+```
+
+```{r}
+enade
+```
+
+```{r}
+names(enade)
+```
+
+```{r}
+library(questionr)
+freq(enade[[101]])
+```
+
+```{r}
+library(car)
+```
+
+```{r}
+variavel = enade[[101]]
+```
+
+```{r}
+variavel = recode(variavel, "c(7,8)=NA")
+freq(variavel)
+```
+
+Automatizando o recode das variáveis nas posições 101 até 142
+
+```{r}
+freq(enade[[122]])
+```
+
+```{r}
+for (col in 101:142) {
+  enade[[col]] = recode(enade[[col]], "c(7,8)=NA")
+}
+```
+
+```{r}
+freq(enade[[141]])
+```
+
+# Loops WHILE e REPEAT
+
+```{r}
+x = 10
+while (x < 20) {
+  print(x)
+  x = x + 1
+}
+```
+
+```{r}
+y = 0
+
+repeat {
+  print(y)
+  y = y + 1
+  
+  if (y > 50) {
+    break
+  }
+}
+```
+
+Você é um professor e deseja fazer correção automática das provas de seus alunos.
+
+```{r}
+notas = c(8,6,4,10,7,9,4,6,5,9,8,4,5,9,7,8,5,3,4)
+
+correcao_simples = ifelse(notas > 5, "Aprovado", "Reprovado")
+correcao_simples
+```
+
+```{r}
+notas = c(8,6,4,10,7,9,4,6,5,9,8,4,5,9,7,8,5,3,4)
+
+for (nota in notas) {
+  if (nota >= 7) {
+    print("Aprovado")
+  } else if (nota >= 5) {
+    print("Recuperação")
+  } else {
+    print("Reprovado")
+  }
+}
+```
+
+# Functionals
+
+## Programação Funcional
+
+Programação funcional -\> Funções do código como funções matemáticas.
+
+y = x + 1
+
+Functionals = Funções que chamam outras funções - No R, estamos falando da família de funções APPLY
+
+```{r}
+for (col in 1:4) {
+  print(mean(iris[[col]]))
+}
+```
+
+```{r}
+sapply(iris[1:4],  mean)
+```
+
+```{r}
+for (i in 1:10) {
+  res = sqrt(i + 3)
+  print(res)
+}
+```
+
+```{r}
+sapply(1:10, function(x) sqrt(x + 3) )
+```
+
+```{r}
+url = "https://github.com/neylsoncrepalde/introducao_ao_r/blob/master/dados/enade_2014_amostra.csv?raw=true"
+
+enade = read_csv2(url)
+```
+
+```{r}
+freq(enade[[101]])
+```
+
+```{r}
+enade[101:142] = sapply(
+  enade[101:142],
+  function(x) recode(x, "c(7,8)=NA")
+)
+```
+
+```{r}
+freq(enade[[101]])
+```
+
+```{r}
+tapply(iris$Sepal.Length, iris$Species, mean)
+```
+
+```{r}
+# Classificar os alunos do enade por jovem e adulto
+summary(enade$nu_idade)
+```
+
+```{r}
+# Solução com loop
+enade$adulto = c()
+for (i in 1:nrow(enade)) {
+  if (enade$nu_idade[i] <= 25) {
+    enade$adulto[i] = "Jovem"
+  } else {
+    enade$adulto[i] = "Adulto"
+  }
+}
+freq(enade$adulto)
+```
+
+```{r}
+enade$jovem = ifelse(enade$nu_idade <= 25, "Jovem", "Adulto")
+freq(enade$jovem)
+```
+
+```{r}
+enade$jovemadulto = sapply(
+  enade$nu_idade,
+  function(x) {
+    if (x <= 25) {
+      return("Jovem")
+    } else {
+      return("Adulto")
+    }
+  }
+)
+freq(enade$jovemadulto)
+```
+
+```{r}
+enade = enade %>% 
+  mutate(jovem_adulto = if_else(nu_idade <= 25, "Jovem", "Adulto"))
+freq(enade$jovem_adulto)
+```
+
+```{r}
+enade %>% 
+  select(jovem_adulto, nu_idade, tp_sexo)
+```
