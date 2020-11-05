@@ -127,3 +127,130 @@ nomes = names(amostra)
 
 lapply(nomes, meuplot)
 ```
+
+# Analisando dados do Enade 2014
+
+Leitura dos dados
+
+```{r}
+library(dplyr)
+library(readr)
+library(ggplot2)
+library(questionr)
+library(car)
+
+url = "https://github.com/neylsoncrepalde/introducao_ao_r/blob/master/dados/enade_2014_amostra.csv?raw=true"
+
+enade = read_csv2(url)
+```
+
+1.  Vamos tratar as variáveis do questionário do estudante relacionadas à IES e práticas pedagógicas (variáveis 101 até 142)
+
+```{r}
+enade[101:142] = sapply(
+  enade[101:142],
+  function(x) recode(x, "c(7,8)=NA")
+)
+```
+
+```{r}
+freq(enade[[103]])
+```
+
+2.  Vamos corrigir a variável sexo
+
+```{r}
+freq(enade$tp_sexo)
+```
+
+```{r}
+enade$tp_sexo[enade$tp_sexo == 'N'] = NA
+```
+
+```{r}
+freq(enade$tp_sexo)
+```
+
+3.  Colocar labels nas variáveis de interesse
+
+```{r}
+enade = enade %>% 
+  mutate(
+    estcivil = case_when(
+      qe_i1 == 'a' ~ 'Solteiro',
+      qe_i1 == 'b' ~ 'Casado',
+      qe_i1 == 'c' ~ 'Separado',
+      qe_i1 == 'd' ~ 'Viúvo',
+      qe_i1 == 'e' ~ 'Outro'
+    ),
+    cor = case_when(
+      qe_i2 == 'a' ~ 'Branco',
+      qe_i2 == 'b' ~ 'Negro',
+      qe_i2 == 'c' ~ 'Pardo',
+      qe_i2 == 'd' ~ 'Amarelo',
+      qe_i2 == 'e' ~ 'Indígena'
+    ),
+    escopai = case_when(
+      qe_i4 == 'a' ~ 0,
+      qe_i4 == 'b' ~ 1,
+      qe_i4 == 'c' ~ 2,
+      qe_i4 == 'd' ~ 3,
+      qe_i4 == 'e' ~ 4,
+      qe_i4 == 'f' ~ 5
+    ),
+    escomae = case_when(
+      qe_i5 == 'a' ~ 0,
+      qe_i5 == 'b' ~ 1,
+      qe_i5 == 'c' ~ 2,
+      qe_i5 == 'd' ~ 3,
+      qe_i5 == 'e' ~ 4,
+      qe_i5 == 'f' ~ 5
+    ),
+    renda = case_when(
+      qe_i8 == 'a' ~ 0,
+      qe_i8 == 'b' ~ 1,
+      qe_i8 == 'c' ~ 2,
+      qe_i8 == 'd' ~ 3,
+      qe_i8 == 'e' ~ 4,
+      qe_i8 == 'f' ~ 5,
+      qe_i8 == 'g' ~ 6
+    )
+  )
+```
+
+```{r}
+enade %>% select(estcivil:renda)
+```
+
+```{r}
+#install.packages("GGally")
+library(GGally)
+ggpairs(enade %>% select(nt_ger, nu_idade, escopai,
+                        escomae, renda))
+```
+
+```{r}
+ggplot(enade, aes(x=cor, y=nt_ger)) +
+  geom_boxplot()
+```
+
+```{r}
+ggplot(enade, aes(x=estcivil, y=nt_ger)) +
+  geom_boxplot()
+```
+
+Vamos implementar um modelo linear tentando explicar a variação de nota como uma função das variáveis idade, escolaridade do pai, escolaridade da mãe, renda, estado civil e cor da pele.
+
+$$
+\widehat{NotaGeral} = \beta_0 + \beta_1 Idade + \beta_2 Escopai + \beta_4 Renda + \beta_5 Estcivil + \beta_6 Cor
+$$
+
+```{r}
+modelo = lm(nt_ger ~ nu_idade + escomae + 
+              renda + estcivil + cor,
+            data = enade)
+```
+
+```{r}
+summary(modelo)
+```
