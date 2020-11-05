@@ -242,7 +242,7 @@ ggplot(enade, aes(x=estcivil, y=nt_ger)) +
 Vamos implementar um modelo linear tentando explicar a variação de nota como uma função das variáveis idade, escolaridade do pai, escolaridade da mãe, renda, estado civil e cor da pele.
 
 $$
-\widehat{NotaGeral} = \beta_0 + \beta_1 Idade + \beta_2 Escopai + \beta_4 Renda + \beta_5 Estcivil + \beta_6 Cor
+NotaGeral = \beta_0 + \beta_1 Idade + \beta_2 Escopai + \beta_4 Renda + \beta_5 Estcivil + \beta_6 Cor + \epsilon
 $$
 
 ```{r}
@@ -253,4 +253,32 @@ modelo = lm(nt_ger ~ nu_idade + escomae +
 
 ```{r}
 summary(modelo)
+```
+
+# Modelo Hierárquico
+
+```{r}
+library(lme4)
+library(merTools)
+library(lmtest)
+```
+
+```{r}
+modeloh = lmer(nt_ger ~ (1 | co_ies) + nu_idade + escomae + renda +
+                 estcivil + cor, data=enade)
+summary(modeloh)
+```
+
+Teste de *likelihood*:
+
+```{r}
+lrtest(modelo, modeloh)
+```
+
+```{r}
+library(MuMIn)
+r.squaredGLMM(modelo)
+r.squaredGLMM(modeloh)
+
+AIC(modelo, modeloh)
 ```
