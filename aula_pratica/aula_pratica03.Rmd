@@ -1,0 +1,111 @@
+# Real Use Case - Modelo de Equações Estruturais com a PNAD 2014
+
+```{r}
+library(dplyr)
+library(readr)
+library(ggplot2)
+library(questionr)
+library(lavaan)
+library(lavaanPlot)
+```
+
+# Extração da PNAD 2014
+
+```{r}
+# url dos dados
+url_dados = "ftp://ftp.ibge.gov.br/Trabalho_e_Rendimento/Pesquisa_Nacional_por_Amostra_de_Domicilios_anual/microdados/2014/Dados_20170323.zip"
+
+# url do dicionario
+url_dicionario = "ftp://ftp.ibge.gov.br/Trabalho_e_Rendimento/Pesquisa_Nacional_por_Amostra_de_Domicilios_anual/microdados/2014/Dicionarios_e_input_20170323.zip"
+
+# o caminho da pasta de armazenamento dos dados
+data_path = "./data/pnad2014"
+
+# Cria o diretório
+dir.create(data_path, recursive = T)
+
+# Download do dicionário
+download.file(
+  url_dicionario,
+  paste0(data_path, "/Dicionarios_e_input_20170323.zip")
+)
+
+# download dos dados
+download.file(
+  url_dados,
+  paste0(data_path, "/Dados_20170323.zip")
+)
+```
+
+Unzipa os arquivos
+
+```{r}
+unzip(
+  paste0(data_path, "/Dicionarios_e_input_20170323.zip"),
+  exdir = data_path
+)
+
+unzip(
+  paste0(data_path, "/Dados_20170323.zip"),
+  exdir = data_path
+)
+```
+
+```{r}
+list.files(data_path)
+```
+
+```{r}
+# Lista o que tem dentro da pasta com problema
+caminho_completo = paste0(data_path,"/", list.files(data_path)[3])
+arquivos = list.files(caminho_completo)
+
+# Copiar os arquivos necessários
+file.copy(
+  paste0(caminho_completo, "/", arquivos[2]) ,
+  paste0(data_path, "/dicionario_pessoas_pnad2014.xls")
+)
+```
+
+# Importar os dados da PNAD
+
+```{r}
+library(readxl)
+dicionario = read_xls(
+  paste0(data_path, "/dicionario_pessoas_pnad2014.xls"),
+  skip = 1
+) %>% filter(!is.na(`Código de variável`))
+
+dicionario$`Posição Inicial` = as.integer(dicionario$`Posição Inicial`)
+
+dicionario
+```
+
+```{r}
+posicoes = fwf_positions(
+  start = dicionario$`Posição Inicial`,
+  end = dicionario$`Posição Inicial` + dicionario$Tamanho - 1,
+  col_names = dicionario$`Código de variável`
+)
+
+pnad = read_fwf(paste0(data_path, "/Dados/PES2014.txt"), posicoes)
+```
+
+```{r}
+pnad
+```
+
+**Plano de voo**: Vamos escolher algumas variáveis para o modelo de equações estruturais que vamos estimar e tratá-las. Vamos trabalhar com
+
+-   Renda do trabalho principal (V9532)
+-   Status sócio-ocupacional (ISEI) - a construir a partir de V9906
+-   Anos de escolaridade (V4803)
+-   Preto (binária pretos=1, brancos=0) - construir a partir de V0404
+-   Ocupação do pai (V32019)
+-   Escolaridade do pai (V32012)
+-   Idade (V8005)
+-   $Idade^2$
+-   Mulher (binária a partir de V0302)
+-   Migração (V0501)
+
+**Filtro**: pessoas de 20 a 64 anos, trabalhando (V9001 = 1) e com renda
