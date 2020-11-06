@@ -1,0 +1,321 @@
+iscogroup,iscocode,cbo2002,cbodom,desccbo
+21,2111,2131,2131,Físicos
+21,2111,2133,2133,Profissionais das ciências atmosféricas e espaciais e de astronomia
+21,2112,2133,2133,Profissionais das ciências atmosféricas e espaciais e de astronomia
+21,2113,2132,2132,Químicos
+21,2114,2133,2133,Profissionais das ciências atmosféricas e espaciais e de astronomia
+21,2114,2134,2134,Geólogos e geofísicos
+21,2121,2111,2111,Profissionais da matemática
+21,2122,2112,2112,Profissionais de estatística
+21,2131,2123,2123,"Administradores de redes, sistemas e banco de dados"
+21,2131,2124,2124,Analistas de sistemas computacionais
+21,2139,2122,2122,Engenheiros em computação
+21,2141,2141,2141,Arquitetos e urbanistas
+21,2141,2629,2627,Designer de interiores de nível superior
+21,2142,2142,2142,Engenheiros civis e afins
+21,2143,2143,2143,"Engenheiros eletricistas, eletrônicos e afins"
+21,2144,2143,2143,"Engenheiros eletricistas, eletrônicos e afins"
+21,2145,2144,2144,Engenheiros mecânicos
+21,2146,2145,2145,Engenheiros químicos
+21,2147,2146,2146,Engenheiros metalurgistas e de materiais
+21,2147,2147,2147,Engenheiros de minas
+21,2148,2148,2148,Engenheiros agrimensores e engenheiros cartógrafos
+21,2148,3123,3123,Técnicos em geomática
+21,2149,2012,2012,Profissionais da metrologia
+21,2149,2012,2012,Profissionais da metrologia
+21,2149,2021,2021,Engenheiros mecatrônicos
+21,2149,2149,2149,"Engenheiros de produção, qualidade e segurança"
+21,2149,2525,2525,Profissionais de administração econômico-financeira
+21,2149,3012,3012,Técnicos de apoio à bioengenharia
+22,2211,2011,2011,Profissionais da biotecnologia
+22,2211,2131,2131,Físicos
+22,2211,2211,2211,Biólogos e afins
+22,2213,2221,2221,Engenheiros agrossilvipecuários
+22,2221,2231,2231,Médicos
+22,2222,2232,2232,Cirurgiões-dentistas
+22,2223,2233,2233,Veterinários e zootecnistas
+22,2224,2234,2234,Farmacêuticos
+22,2229,2236,2236,Profissionais da fisioterapia e afins
+22,2229,2237,2237,Nutricionistas
+22,2229,2238,2236,Fonoaudiólogos
+22,2230,2235,2235,Enfermeiros
+23,2310,1313,1220,Diretores e gerentes de instituição de serviços educacionais
+23,2310,2341,2340,"Professores de matemática, estatística e informática do Ensino Superior"
+23,2310,2342,2340,"Professores de ciências físicas, químicas e afins do Ensino Superior"
+23,2310,2343,2340,"Professores de arquitetura e urbanismo, engenharia, geofísica e geologia do Ensino Superior"
+23,2310,2344,2340,Professores de ciências biológicas e da saúde do Ensino Superior
+23,2310,2345,2340,Professores na área de formação pedagógica do Ensino Superior
+23,2310,2346,2340,Professores nas áreas de língua e literatura do Ensino Superior
+23,2310,2347,2340,Professores de ciências humanas do Ensino Superior
+23,2310,2348,2340,"Professores de ciências econômicas, administrativas e contábeis do Ensino Superior"
+23,2310,2349,2340,Professores de artes do Ensino Superior
+23,2320,2321,2321,Professores do Ensino Médio
+23,2320,2331,2330,Professores do Ensino Profissional
+23,2320,2332,2330,Instrutores do Ensino Profissional
+23,2331,2313,2313,Professores de nível superior no Ensino Fundamental de quinta a oitava série
+23,2331,2321,2321,Professores do Ensino Médio
+23,2331,2331,2330,Professores do Ensino Profissional
+23,2332,2311,2311,Professores de nível superior na educação infantil
+23,2332,2312,2312,Professores de nível superior do Ensino Fundamental de primeira a quarta série
+23,2332,2313,2313,Professores de nível superior no Ensino Fundamental de quinta a oitava série
+23,2340,2392,2392,Professores de educação especial
+23,2351,2394,2394,"Programadores, avaliadores e orientadores de ensino"
+23,2352,3341,3341,Inspetores de alunos
+23,2359,2312,2312,Professores de nível superior do Ensino Fundamental de primeira a quarta série
+23,2359,2332,2330,Instrutores do Ensino Profissional
+23,2359,2341,2340,"Professores de matemática, estatística e informática do Ensino Superior"
+23,2359,3322,3322,Professores práticos no Ensino Profissionalizante
+24,2411,2522,2522,Contadores e afins
+24,2412,2524,2524,Profissionais de recursos humanos
+24,2419,2521,2521,Administradores
+24,2419,2523,2523,Secretárias executivas e bilíngues
+24,2419,2525,2525,Profissionais de administração econmico-financeira
+24,2419,2531,2531,"Profissionais de relações públicas, publicidade, mercado e negócios"
+24,2419,3543,3543,Analistas de comércio exterior
+24,2421,2410,2410,Advogados
+24,2421,2412,2412,Procuradores e advogados públicos
+24,2421,2422,2422,Membros do ministério público
+24,2421,2424,2422,Defensores públicos e procuradores da assistência judiciária
+24,2422,1113,1113,Magistrados
+24,2429,2412,2412,Procuradores e advogados públicos
+24,2429,2413,3514,Tabeliães e registradores
+24,2429,2423,2423,Delegados de polícia
+24,2431,2613,2613,Arquivistas e museólogos
+24,2432,2612,2612,Profissionais da informação
+24,2441,2512,2512,Economistas
+24,2442,2511,2511,Profissionais em pesquisa e análise antropológica sociológica
+24,2442,2513,2513,Profissionais em pesquisa e análise geográfica
+24,2444,2514,2514,Filósofos
+24,2444,2614,2614,"Filólogos, intérpretes e tradutores"
+24,2445,2515,2515,Psicólogos e psicanalistas
+24,2446,2516,2516,Assistentes sociais e economistas domésticos
+24,2451,2515,2515,Psicólogos e psicanalistas
+24,2451,2611,2611,Profissionais do jornalismo
+24,2451,2615,2615,Profissionais da escrita
+24,2451,2616,2616,Editores
+24,2451,2617,2617,"Locutores, comentaristas e repórteres de rádio e televisão"
+24,2451,2628,2622,Artistas da dança (exceto dança tradicional e popular)
+24,2452,2624,2625,Artistas visuais e desenhistas industriais
+24,2453,2626,2624,"Músicos compositores, arranjadores, regentes e musicólogos"
+24,2453,2627,2624,Músicos intérpretes
+24,2454,2628,2622,Artistas da dança (exceto dança tradicional e popular)
+24,2455,2611,2611,Profissionais do jornalismo
+24,2455,2621,2621,Produtores de espetáculos
+24,2455,2622,2623,Diretores de espetáculos e afins
+24,2455,2623,2627,Cenógrafos
+24,2455,2625,2623,Atores
+24,2460,2631,2631,"Ministros de culto, missionários, teólogos e profissionais assemelhados"
+31,3111,3115,3115,"Técnicos em controle ambiental, utilidades e tratamento de efluentes"
+31,3111,3161,3161,Técnicos em geologia
+31,3112,3121,3121,Técnicos em construção civil (edificações)
+31,3112,3122,3122,Técnicos em construção civil (obras de infraestrutura)
+31,3112,3123,3123,Técnicos em geomática
+31,3112,3185,3189,Desenhistas projetistas de construção civil e arquitetura
+31,3113,3131,3131,Técnicos em eletricidade e eletrotécnica
+31,3113,3187,3189,Desenhistas projetistas da eletrônica
+31,3114,3001,3001,Técnicos em mecatrônica
+31,3114,3003,3003,Técnicos em eletromecânica
+31,3114,3132,3134,Técnicos em eletrônica
+31,3114,3133,3135,Técnicos em telecomunicações
+31,3114,3134,3136,Técnicos em calibração e instrumentação
+31,3114,3135,3137,Técnicos em fotônica
+31,3114,3187,3189,Desenhistas projetistas da eletrônica
+31,3114,3425,3425,Técnicos em transportes aéreos
+31,3115,3001,3001,Técnicos em mecatrônica
+31,3115,3141,3141,"Técnicos mecânicos na fabricação e montagem de máquinas, sistemas e instrumentos"
+31,3115,3142,3142,Técnicos mecânicos (ferramentas)
+31,3115,3143,3143,Técnicos em mecânica veicular
+31,3115,3144,3144,"Técnicos mecânicos na manutenção de máquinas, sistemas e instrumentos"
+31,3115,3186,3189,Desenhistas projetistas da mecânica
+31,3116,3011,3011,Técnicos de laboratório industrial
+31,3116,3112,3112,"Técnicos de produção de indústrias químicas, petroquímicas, refino de petróleo, gás e afins"
+31,3116,3113,3113,"Técnicos em materiais, produtos cerâmicos e vidros"
+31,3116,3114,3114,Técnicos em fabricação de produtos plásticos e de borracha
+31,3116,3115,3115,"Técnicos em controle ambiental, utilidades e tratamento de efluentes"
+31,3116,3116,3116,Técnicos têxteis
+31,3117,3146,3146,Técnicos em metalurgia (estruturas metálicas)
+31,3117,3147,3147,Técnicos em siderurgia
+31,3117,3163,3163,Técnicos em mineração
+31,3118,3180,3189,"Desenhistas técnicos, em geral"
+31,3118,3181,3189,Desenhistas técnicos da construção civil e arquitetura
+31,3118,3182,3189,Desenhistas técnicos da mecânica
+31,3118,3183,3189,"Desenhistas técnicos em eletricidade, eletrônica, eletromecânica, calefação, ventilação e refrigeração"
+31,3118,3184,3189,Desenhistas técnicos de produtos e serviços diversos
+31,3119,3123,3123,Técnicos em geomática
+31,3119,3191,3191,Técnicos do vestuário
+31,3119,3192,3192,Técnicos do mobiliário e afins
+31,3119,3252,3252,"Técnicos em produção, conservação e de qualidade de alimentos"
+31,3119,3421,3421,Técnicos em logística de transportes multimodal
+31,3119,3516,3516,Técnicos em segurança no trabalho
+31,3119,3713,3713,Técnicos em artes gráficas
+31,3119,3911,3911,Técnicos de planejamento e controle de produção
+31,3121,3171,3171,Técnicos de desenvolvimento de sistemas e aplicações
+31,3122,3132,3134,Técnicos em eletrônica
+31,3122,3172,3172,Técnicos em operação e monitoração de computadores
+31,3131,2618,3722,Fotógrafos profissionais
+31,3131,3131,3131,Técnicos em eletricidade e eletrotécnica
+31,3131,3721,3721,Captadores de imagens em movimento
+31,3131,3741,3741,Técnicos em áudio
+31,3131,3742,3742,Técnicos em cenografia
+31,3131,3744,3742,"Técnicos em montagem, edição e finalização de filme e vídeo"
+31,3131,6134,6139,Produtores de animais e insetos úteis
+31,3132,3722,3172,Operadores de rede de teleprocessamento e afins
+31,3132,3731,3731,Técnicos de operação de emissoras de rádio
+31,3132,3732,3732,Técnicos em operação de sistemas de televisão e de produtoras de vídeo
+31,3132,3742,3742,Técnicos em cenografia
+31,3132,3743,3743,Técnicos em operação de aparelhos de projeção
+31,3132,3744,3742,"Técnicos em montagem, edição e finalização de filme e vídeo"
+31,3133,3241,3241,Técnicos em equipamentos médicos e odontológicos
+31,3139,3721,3721,Captadores de imagens em movimento
+31,3141,2152,2152,Oficiais de máquinas da marinha mercante
+31,3142,2151,2151,Oficiais de convés e afins
+31,3142,3412,3412,"Técnicos marítimos, fluviários e pescadores de convés"
+31,3142,3413,3413,Técnicos marítimos e fluviários de máquinas
+31,3143,2153,2153,Profissionais da pilotagem aeronáutica
+31,3143,3411,3411,"Pilotos de aviação comercial, mecânicos de voo e afins"
+31,3144,3425,3425,Técnicos em transportes aéreos
+31,3152,2543,3515,Auditores fiscais do trabalho
+31,3152,3912,3912,Técnicos de controle da produção
+31,3152,7618,7618,Inspetores e revisores de produção têxtil
+32,3211,3201,3201,Técnicos em biologia
+32,3211,3242,3242,Técnicos e auxiliares técnicos em patologia clínica
+32,3211,3251,3251,Técnico em farmácia e em manipulação farmacêutica
+32,3211,3253,3253,Técnicos de apoio à biotecnologia
+32,3211,3281,3281,Técnicos em necrópsia e taxidermistas
+32,3212,3211,3211,Técnicos agrícolas
+32,3212,3212,3213,Técnicos florestais
+32,3212,3213,3214,Técnicos em aquicultura
+32,3212,3231,3231,Técnicos em pecuária
+32,3212,3951,3911,Técnicos de apoio em pesquisa e desenvolvimento
+32,3222,3522,3522,Agentes da saúde e do meio ambiente
+32,3224,3223,3223,Técnicos em óptica e optometria
+32,3225,3224,3224,Técnicos de odontologia
+32,3226,3225,3225,Técnicos em próteses ortopédicas
+32,3229,3221,3221,"Acupunturistas, podólogos, quiropraxistas e afins"
+32,3229,3226,3225,Técnicos de imobilizações ortopédicas
+32,3231,3222,3222,Técnicos e auxiliares de enfermagem
+32,3242,2151,2151,Oficiais de convés e afins
+33,3320,3311,3311,Professores de nível médio na Educação Infantil
+33,3340,3312,3312,Professores de nível médio no Ensino Fundamental
+33,3340,3313,3313,Professores de nível médio no Ensino Profissionalizante
+33,3340,3321,3321,Professores leigos no Ensino Fundamental
+33,3340,3331,3331,Instrutores e professores de cursos livres
+33,3340,3714,5162,Recreadores
+34,3411,2533,3531,"Corretores de valores, ativos financeiros, mercadorias e derivativos"
+34,3412,3517,3517,Técnicos de seguros e afins
+34,3412,3545,3545,Corretores de seguros
+34,3413,3546,3546,Corretores de imóveis
+34,3414,3548,3548,Técnicos em turismo
+34,3415,3541,3541,Técnicos de vendas especializadas
+34,3415,5201,5201,Supervisores de vendas e de prestação de serviços
+34,3416,3542,3542,Compradores
+34,3417,3544,3544,Leiloeiros e avaliadores
+34,3421,3547,3547,Representantes comerciais autônomos
+34,3422,3422,3422,Despachantes aduaneiros
+34,3423,3513,3513,Técnicos em administração
+34,3431,3511,3511,Técnicos em contabilidade
+34,3431,3711,3711,Técnicos em biblioteconomia
+34,3431,3712,3712,Técnicos em museologia e afins
+34,3432,3514,3514,Serventuários da justiça e afins
+34,3433,3511,3511,Técnicos em contabilidade
+34,3434,3511,3511,Técnicos em contabilidade
+34,3434,3513,3513,Técnicos em administração
+34,3434,4241,4241,Entrevistadores e recenseadores
+34,3439,2523,2523,Secretárias executivas e bilíngues
+34,3439,4241,4241,Entrevistadores e recenseadores
+34,3442,2541,3515,Auditores fiscais e técnicos da Receita Federal
+34,3442,2544,3515,Fiscais de tributos estaduais e municipais
+34,3443,2542,3515,Auditores fiscais da Previdência Social
+34,3444,3522,3522,Agentes da saúde e do meio ambiente
+34,3449,3523,3523,Agentes fiscais metrológicos e de qualidade
+34,3449,3524,3524,Profissionais de direitos autorais e de avaliacão de produtos dos meios de comunicação
+34,3450,2041,3518,Peritos criminais
+34,3450,3518,3518,Agentes de investigação e identificação
+34,3471,2623,2627,Cenógrafos
+34,3471,3751,3751,"Designers de interiores, de vitrines e visual merchandiser (nível médio)"
+34,3472,2617,2617,"Locutores, comentaristas e repórteres de rádio e televisão"
+34,3472,3763,3764,"Apresentadores de espetáculos, eventos e programas"
+34,3473,3761,3761,Dançarinos tradicionais e populares
+34,3474,3762,3763,Artistas de circo (circenses)
+34,3475,2241,2391,Profissionais da educação física
+34,3475,3771,3772,Atletas profissionais
+34,3475,3772,3773,Árbitros desportivos
+122,1221,1221,1220,"Diretores de produção e operações em empresa agropecuária, pesqueira, aquícola e florestal"
+122,1222,1222,1220,"Diretores de produção e operações em empresa da indústria extrativa, transformação e de serviços de utilidade pública"
+122,1223,1223,1220,Diretores de operações de obras em empresa de construção
+122,1224,1224,1220,Diretores de operações em empresa do comércio
+122,1225,1225,1220,"Diretores de operações de serviços em empresa de turismo, de alojamento e de alimentação"
+122,1226,1226,1220,"Diretores de operações de serviços em empresa de armazenamento, de transporte e de telecomunicação"
+122,1226,1416,1310,"Gerentes de operações de serviços em empresa de transporte, de comunicação e de logística (armazenagem e distribuição)"
+122,1227,1227,1220,Diretores de operações de serviços em instituição de intermediação financeira
+122,1229,1311,1220,"Diretores e gerentes de operações em empresa de serviços pessoais, sociais e culturais"
+122,1229,1312,1220,Diretores e gerentes de operações em empresa de serviços de saúde
+122,1229,1313,1220,Diretores e gerentes de instituição de serviços educacionais
+123,1231,1231,1230,Diretores administrativos e financeiros
+123,1232,1232,1230,Diretores de recursos humanos e relações de trabalho
+123,1232,1422,1320,Gerentes de recursos humanos e de relações do trabalho
+123,1233,1233,1230,Diretores de comercialização e marketing
+123,1233,1423,1320,"Gerentes de comercialização, marketing e comunicação"
+123,1233,1424,1320,Gerentes de suprimentos e afins
+123,1234,1423,1320,"Gerentes de comercialização, marketing e comunicação"
+123,1235,1234,1230,Diretores de suprimentos e afins
+123,1236,1236,1230,Diretores de serviços de informática
+123,1236,1425,1320,Gerentes de tecnologia da informação
+123,1236,1426,1320,Gerentes de pesquisa e desenvolvimento
+123,1239,1237,1230,Diretores de pesquisa e desenvolvimento
+123,1239,1238,1230,Diretores de manutenção
+123,1239,1423,1320,"Gerentes de comercialização, marketing e comunicação"
+123,1239,1427,1320,Gerentes de manutenção
+131,1311,1411,1310,"Gerentes de produção e operações em empresa agropecuária, pesqueira, aquícola e florestal"
+131,1312,1412,1310,"Gerentes de produção e operações em empresa da indústria extrativa, de transformação e de serviços de utilidade pública"
+131,1313,1413,1310,Gerentes de obras em empresa de construção
+131,1314,1414,1310,Gerentes de operações comerciais e de assistência técnica
+131,1315,1415,1310,"Gerentes de operações de serviços em empresa de turismo, de alojamento e alimentação"
+131,1317,1417,1310,Gerentes de operações de serviços em instituição de intermediação financeira
+131,1318,1311,1220,"Diretores e gerentes de operações em empresa de serviços pessoais, sociais e culturais"
+131,1318,1312,1220,Diretores e gerentes de operações em empresa de serviços de saúde
+131,1318,1313,1220,Diretores e gerentes de instituição de serviços educacionais
+21,2113,2031,,Pesquisadores das ciências naturais e exatas
+21,2114,2031,,Pesquisadores das ciências naturais e exatas
+21,2121,2031,,Pesquisadores das ciências naturais e exatas
+21,2132,2031,,Pesquisadores das ciências naturais e exatas
+21,2142,2032,,Pesquisadores de engenharia e tecnologia
+21,2143,2032,,Pesquisadores de engenharia e tecnologia
+21,2145,2032,,Pesquisadores de engenharia e tecnologia
+21,2146,2032,,Pesquisadores de engenharia e tecnologia
+21,2147,2032,,Pesquisadores de engenharia e tecnologia
+21,2149,2032,,Pesquisadores de engenharia e tecnologia
+22,2211,2030,,Pesquisadores das ciências biológicas
+22,2211,2034,,Pesquisadores das ciências da agricultura
+22,2213,2034,,Pesquisadoresdasciênciasdaagricultura
+22,2221,2033,,Pesquisadoresdasciênciasdasaúde
+22,2221,2034,,Pesquisadoresdasciênciasdaagricultura
+22,2223,2033,,Pesquisadoresdasciênciasdasaúde
+22,2229,2033,,Pesquisadoresdasciênciasdasaúde
+23,2310,2035,,Pesquisadoresdasciênciassociaisehumanas
+24,2419,2035,,Pesquisadoresdasciênciassociaisehumanas
+24,2441,2035,,Pesquisadoresdasciênciassociaisehumanas
+24,2443,2035,,Pesquisadoresdasciênciassociaisehumanas
+24,2445,2035,,Pesquisadoresdasciênciassociaisehumanas
+22,2212,,,"Farmacologistas, patologistas eafins"
+31,3123,,,Técnicosemcontrolederobôsindustriais
+31,3145,,,Técnicos em segurançaaeronáutica
+31,3151,,,Inspetoresdeedifíciosetécnicosemprevençãoeinvestigaçãodeincêndios
+32,3213,,,Conselheiros agrícolas eflorestais
+32,3221,,,Práticoseauxiliaresemmedicina
+32,3223,,,Técnicosemdietéticaenutrição
+32,3227,,,Técnicoseauxiliaresemveterinária
+32,3228,,,Técnicos e auxiliares emfarmácia
+32,3232,,,"Técnicosemobstetrícia,denívelmédio"
+32,3241,,,Praticantes de medicinatradicional
+33,3310,,,"Professoresdeensinofundamental,denivelmédio"
+33,3330,,,"Professoresdeensinoespecial,denivelmédio"
+34,3419,,,"Profissionaisdeopreraçõesfinanceiras,denivelmédio,classificadosemoutrascategorias"
+34,3429,,,"Agentescomerciaisecorretores,classificadosemoutrascategorias"
+34,3441,,,Fiscaisdeaduanaeinspetoresdefronteiras
+34,3460,,,"Trabalhadoreseassistentessociais,denivelmédio"
+34,3480,,,Auxiliaresleigosdeigrejasecultos
+122,1228,,,"Diretoresdedepartamentosdeprodução,operaçõeseserviçosdecuidadospessoais,limpezaesimilares"
+123,1237,,,Diretoresdedepartamentosdepesquisaedesenvolvimento
+131,1316,,,"Gerentesdeempresasdetransporte,armazenamentoecomunicações"
+131,1319,,,"Gerentesdeempresas,nãoclassificadosemoutrascategorias"

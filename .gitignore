@@ -2,5 +2,5 @@
 .Rhistory
 .RData
 .Ruserdata
-data/
+data/pnad2014/
 *.png
