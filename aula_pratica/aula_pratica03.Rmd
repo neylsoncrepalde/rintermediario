@@ -69,8 +69,12 @@ file.copy(
 
 # Importar os dados da PNAD
 
+Estamos retomando deste lugar no segundo dia de projeto. Como o arquivo está salvo na pasta aula_pratica, não estamos conseguindo, de uma maneira simples, orientar o R para a pasta superior. Vamos inserir essa adaptação direto nos `paths` de leitura de arquivos.
+
 ```{r}
 library(readxl)
+data_path = "../data/pnad2014"
+
 dicionario = read_xls(
   paste0(data_path, "/dicionario_pessoas_pnad2014.xls"),
   skip = 1
@@ -111,31 +115,42 @@ pnad
 **Filtro**: pessoas de 20 a 64 anos, trabalhando (V9001 = 1) e com renda
 
 ```{r}
+# Começamos com a pnad
 amostra1 = pnad %>% 
+  # Selecionamos apenas as variáveis de interesse
   dplyr::select(
     V9532, V9906, V4803, V0404, V32019, V32012, V8005, 
     V0302, V0501, V9001
   ) %>% 
-  # Tratar os filtros
+  # Cria colunas de idade e renda
   mutate(idade = as.integer(V8005), 
          renda = as.integer(V9532)) %>% 
-  # Aplicar os filtros
+  # Filtrando apenas os casos de interesse
+  # idade entre 20 e 64 anos, renda maior que 0 e trabalhando
   filter(
     idade >= 20, idade <= 64, V9001 == 1,
     renda > 0, renda < 999999999998
   ) %>% 
+  # Centralizando a idade na média
   mutate(idade = idade - mean(idade, na.rm=T)) %>% 
+  # Criando o log natural da renda
   mutate(lnrenda = log(renda)) %>% 
-  # Tratar as outras variáveis
+  # Criando anosesco - transofrma V4803 em integer e subtrai 1
+  # Subtrai 1 para que 0 corresponda a nenhuma escolaridade
   mutate(anosesco = as.integer(V4803) - 1L) %>% 
+  # Substituindo o valor 16 por NA
+  # Como já subtraímos 1 na variável, ao invés do valor original 17
+  # Vamos atribuir a 16 (não determinados) os casos missing
   mutate(anosesco = case_when(
     anosesco == 16 ~ NA_integer_,
     TRUE ~ anosesco
   )) %>% 
+  # Criando a variável negro
   mutate(negro = case_when(
     V0404 == 2 | V0404 == 6 ~ 0L,
     V0404 == 4 | V0404 == 8 | V0404 == 0 ~ 1L
   )) %>% 
+  # Criando escopai - categorias de escolaridade equivalentes
   mutate(escopai = as.integer(V32012)) %>% 
   mutate(escopai = case_when(
     escopai == 11 ~ NA_integer_,
@@ -148,15 +163,19 @@ amostra1 = pnad %>%
     escopai == 9 ~ 6L,
     escopai == 10 ~ 7L
   )) %>% 
+  # Criando a idade ao quadrado
   mutate(idade2 = idade^2) %>% 
+  # Criando a variável MULHER
   mutate(mulher = case_when(
     V0302 == 2 ~ 0L,
     V0302 == 4 ~ 1L
   )) %>% 
+  # Criando migração
   mutate(migracao = case_when(
     V0501 == 1 ~ 0L,
     V0501 == 3 ~ 1L
   )) %>% 
+  # Filtra apenas os casos em que escopai não é missing
   filter(!is.na(escopai))
 
 amostra1
@@ -175,8 +194,7 @@ pnad %>%
   summarise(medrenda = mean(renda)) %>% 
   ggplot(aes(x=idade, y=medrenda)) +
   geom_point() + 
-  stat_smooth(method = 'lm',
-              formula = 'y~poly(x, 2)')
+  stat_smooth(method='lm', formula = 'y ~ poly(x, 2)')
 ```
 
 ### ISEI
@@ -193,18 +211,81 @@ tabconv
 ```
 
 ```{r}
+# Começamos da amostra
 amostra = amostra1 %>% 
+  # modifica colunas V9906 e V32012 (CBO)
+  # para serem inteiros
   mutate(V9906 = as.integer(V9906), V32019 = as.integer(V32019)) %>% 
+  # INNER JOIN - junta as tabelas da PNAD e tabela de conversão ISCO
+  # Junta informação de profissão do indivíduo
   inner_join(
     tabconv %>% dplyr::select(iscocode, cbo2002),
     by = c("V9906" = "cbo2002")
   ) %>% 
+  # Trocando o nome da variável iscocode
   mutate(isco = iscocode) %>% dplyr::select(-iscocode) %>% 
+  # INNER JOIN - junta tabelas pelo cod de profissão do PAI
   inner_join(
     tabconv %>% dplyr::select(iscocode, cbo2002),
     by = c("V32019" = "cbo2002")
   ) %>% 
+  # Trocando o nome da variável
   mutate(iscopai = iscocode) %>% dplyr::select(-iscocode)
 
 amostra
+```
+
+# Transformar ISCO para ISEI
+
+```{r}
+library(SocialPosition)
+amostra = recode_from_ISCO88_to_ISEI(amostra$isco, amostra)
+names(amostra)[ncol(amostra)] = 'isei'
+
+amostra = recode_from_ISCO88_to_ISEI(amostra$iscopai, amostra)
+names(amostra)[ncol(amostra)] = 'iseipai'
+amostra
+```
+
+Vamos verificar a correlação linear entre a escolaridade do filho e do pai
+
+```{r}
+ggplot(amostra, aes(x = iseipai, y = isei)) +
+  geom_jitter(alpha=.4) +
+  theme_bw() + 
+  stat_smooth(method='lm')
+```
+
+```{r}
+cor.test(amostra$iseipai, amostra$isei)
+```
+
+# Modelo de equações estruturais
+
+```{r}
+# Modelo de equações estruturais
+
+model = '
+  # variáveis latentes
+  socialorigin =~ iseipai + escopai
+  
+  # regressões
+  anosesco ~ socialorigin + negro + migracao
+  isei ~ anosesco + socialorigin + negro + mulher + migracao
+  lnrenda ~ anosesco + socialorigin + isei + negro + mulher + idade + idade2
+  
+  # covariâncias residuais
+  isei ~~ iseipai
+  anosesco ~~ escopai
+'
+
+mee = sem(model, data=amostra)
+summary(mee, standardized=T, rsquare=T)
+```
+
+```{r}
+lavaanPlot(model = mee, 
+           node_options = list(shape = "box", fontname = "Helvetica"), 
+           edge_options = list(color = "grey"), 
+           coefs = T, covs=T, stars=T, stand=T)
 ```
