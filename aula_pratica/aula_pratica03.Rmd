@@ -178,3 +178,33 @@ pnad %>%
   stat_smooth(method = 'lm',
               formula = 'y~poly(x, 2)')
 ```
+
+### ISEI
+
+```{r}
+tabconv = read_csv('https://raw.githubusercontent.com/neylsoncrepalde/rintermediario/master/data/tabela_conversao_cbo_isco.csv')
+tabconv
+```
+
+Vamos associar o CBO a um código ISCO
+
+```{r}
+tabconv
+```
+
+```{r}
+amostra = amostra1 %>% 
+  mutate(V9906 = as.integer(V9906), V32019 = as.integer(V32019)) %>% 
+  inner_join(
+    tabconv %>% dplyr::select(iscocode, cbo2002),
+    by = c("V9906" = "cbo2002")
+  ) %>% 
+  mutate(isco = iscocode) %>% dplyr::select(-iscocode) %>% 
+  inner_join(
+    tabconv %>% dplyr::select(iscocode, cbo2002),
+    by = c("V32019" = "cbo2002")
+  ) %>% 
+  mutate(iscopai = iscocode) %>% dplyr::select(-iscocode)
+
+amostra
+```
