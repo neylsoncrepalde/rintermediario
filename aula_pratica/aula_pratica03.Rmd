@@ -118,12 +118,13 @@ amostra1 = pnad %>%
   ) %>% 
   # Tratar os filtros
   mutate(idade = as.integer(V8005), 
-         renda = as.integer(V9001)) %>% 
+         renda = as.integer(V9532)) %>% 
   # Aplicar os filtros
   filter(
     idade >= 20, idade <= 64, V9001 == 1,
     renda > 0, renda < 999999999998
   ) %>% 
+  mutate(idade = idade - mean(idade, na.rm=T)) %>% 
   mutate(lnrenda = log(renda)) %>% 
   # Tratar as outras variáveis
   mutate(anosesco = as.integer(V4803) - 1L) %>% 
@@ -159,4 +160,21 @@ amostra1 = pnad %>%
   filter(!is.na(escopai))
 
 amostra1
+```
+
+```{r}
+pnad %>% 
+  mutate(idade = as.integer(V8005), 
+         renda = as.integer(V9532)) %>% 
+  # Aplicar os filtros
+  filter(
+    idade >= 20, idade <= 64, V9001 == 1,
+    renda > 0, renda < 999999999998
+  ) %>% 
+  group_by(idade) %>% 
+  summarise(medrenda = mean(renda)) %>% 
+  ggplot(aes(x=idade, y=medrenda)) +
+  geom_point() + 
+  stat_smooth(method = 'lm',
+              formula = 'y~poly(x, 2)')
 ```
