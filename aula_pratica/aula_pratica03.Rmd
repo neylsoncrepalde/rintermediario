@@ -109,3 +109,54 @@ pnad
 -   Migração (V0501)
 
 **Filtro**: pessoas de 20 a 64 anos, trabalhando (V9001 = 1) e com renda
+
+```{r}
+amostra1 = pnad %>% 
+  dplyr::select(
+    V9532, V9906, V4803, V0404, V32019, V32012, V8005, 
+    V0302, V0501, V9001
+  ) %>% 
+  # Tratar os filtros
+  mutate(idade = as.integer(V8005), 
+         renda = as.integer(V9001)) %>% 
+  # Aplicar os filtros
+  filter(
+    idade >= 20, idade <= 64, V9001 == 1,
+    renda > 0, renda < 999999999998
+  ) %>% 
+  mutate(lnrenda = log(renda)) %>% 
+  # Tratar as outras variáveis
+  mutate(anosesco = as.integer(V4803) - 1L) %>% 
+  mutate(anosesco = case_when(
+    anosesco == 16 ~ NA_integer_,
+    TRUE ~ anosesco
+  )) %>% 
+  mutate(negro = case_when(
+    V0404 == 2 | V0404 == 6 ~ 0L,
+    V0404 == 4 | V0404 == 8 | V0404 == 0 ~ 1L
+  )) %>% 
+  mutate(escopai = as.integer(V32012)) %>% 
+  mutate(escopai = case_when(
+    escopai == 11 ~ NA_integer_,
+    escopai == 12 ~ 0L,
+    escopai == 1 ~ 1L,
+    escopai == 4 ~ 2L,
+    escopai == 2 ~ 3L,
+    escopai == 5 | escopai == 7 ~ 4L,
+    escopai == 6 | escopai == 8 | escopai == 3 ~ 5L,
+    escopai == 9 ~ 6L,
+    escopai == 10 ~ 7L
+  )) %>% 
+  mutate(idade2 = idade^2) %>% 
+  mutate(mulher = case_when(
+    V0302 == 2 ~ 0L,
+    V0302 == 4 ~ 1L
+  )) %>% 
+  mutate(migracao = case_when(
+    V0501 == 1 ~ 0L,
+    V0501 == 3 ~ 1L
+  )) %>% 
+  filter(!is.na(escopai))
+
+amostra1
+```
